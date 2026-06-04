@@ -1,0 +1,113 @@
+name: ICA Triggered Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: 'Task to execute'
+        required: false
+        default: 'default task'
+        type: string
+      environment:
+        description: 'Environment to run in'
+        required: false
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      message:
+        description: 'Custom message'
+        required: false
+        type: string
+      debug:
+        description: 'Enable debug mode'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  execute-task:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Display workflow information
+        run: |
+          echo "=========================================="
+          echo "🚀 ICA Triggered Workflow Started"
+          echo "=========================================="
+          echo "Task: ${{ github.event.inputs.task }}"
+          echo "Environment: ${{ github.event.inputs.environment }}"
+          echo "Message: ${{ github.event.inputs.message }}"
+          echo "Debug Mode: ${{ github.event.inputs.debug }}"
+          echo "Triggered by: ${{ github.actor }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Branch: ${{ github.ref }}"
+          echo "Commit SHA: ${{ github.sha }}"
+          echo "=========================================="
+      
+      - name: Set up Node.js (if needed)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Execute custom task
+        run: |
+          echo "Executing task: ${{ github.event.inputs.task }}"
+          
+          # Add your custom logic here based on the task input
+          case "${{ github.event.inputs.task }}" in
+            "build")
+              echo "Running build process..."
+              # npm install
+              # npm run build
+              ;;
+            "test")
+              echo "Running tests..."
+              # npm install
+              # npm test
+              ;;
+            "deploy")
+              echo "Running deployment..."
+              # Add deployment commands
+              ;;
+            *)
+              echo "Running default task..."
+              echo "Task completed successfully!"
+              ;;
+          esac
+      
+      - name: Debug information
+        if: ${{ github.event.inputs.debug == 'true' }}
+        run: |
+          echo "=========================================="
+          echo "🔍 Debug Information"
+          echo "=========================================="
+          echo "Working Directory: $(pwd)"
+          echo "Files in current directory:"
+          ls -la
+          echo "Environment Variables:"
+          env | sort
+          echo "=========================================="
+      
+      - name: Send notification (example)
+        run: |
+          echo "Task '${{ github.event.inputs.task }}' completed in ${{ github.event.inputs.environment }} environment"
+          # Add notification logic here (Slack, Discord, Email, etc.)
+      
+      - name: Workflow summary
+        run: |
+          echo "## Workflow Execution Summary 📊" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Task**: ${{ github.event.inputs.task }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment**: ${{ github.event.inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Message**: ${{ github.event.inputs.message }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: ✅ Completed" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered by**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Timestamp**: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+
+# Made with Bob
