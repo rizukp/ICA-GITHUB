@@ -18,7 +18,7 @@
       "endpoint": "/trigger-workflow",
       "headers": {
         "Content-Type": "application/json",
-        "x-api-key": "${API_KEY}"
+        "x-api-key": "82679a134903d35084f7c35e25a4b4c331a2533cacc57a6b563f373a2d28e139"
       },
       "parameters": [
         {
@@ -126,7 +126,7 @@
       "method": "GET",
       "endpoint": "/workflows",
       "headers": {
-        "x-api-key": "${API_KEY}"
+        "x-api-key": "82679a134903d35084f7c35e25a4b4c331a2533cacc57a6b563f373a2d28e139"
       },
       "parameters": [],
       "responseMapping": {
@@ -150,7 +150,7 @@
       "method": "GET",
       "endpoint": "/workflow-runs",
       "headers": {
-        "x-api-key": "${API_KEY}"
+        "x-api-key": "82679a134903d35084f7c35e25a4b4c331a2533cacc57a6b563f373a2d28e139"
       },
       "parameters": [
         {
