@@ -1,0 +1,205 @@
+{
+  "@context": {
+    "sro": "http://example.org/sro#",
+    "schema": "http://schema.org/"
+  },
+  "@graph": [
+    {
+      "@id": "goal-001",
+      "@type": "sro:Goal",
+      "goalId": "goal-001",
+      "goalName": "Automate Deployment Process",
+      "description": "Enable automated deployments through natural language commands via ICA",
+      "priority": "HIGH",
+      "successCriteria": [
+        "Deployments can be triggered via ICA commands",
+        "Zero manual GitHub UI interaction needed",
+        "Deployment time reduced by 50%",
+        "Success rate > 95%"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "@id": "goal-002",
+      "@type": "sro:Goal",
+      "goalId": "goal-002",
+      "goalName": "Improve Developer Experience",
+      "description": "Make workflow triggering intuitive and fast for developers",
+      "priority": "HIGH",
+      "successCriteria": [
+        "Natural language interface available",
+        "Response time < 2 seconds",
+        "Clear feedback on all actions",
+        "Developer satisfaction score > 4/5"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "@id": "goal-003",
+      "@type": "sro:Goal",
+      "goalId": "goal-003",
+      "goalName": "Ensure System Reliability",
+      "description": "Maintain high availability and performance of the workflow trigger service",
+      "priority": "HIGH",
+      "successCriteria": [
+        "99% uptime during working hours",
+        "No data loss",
+        "Graceful error handling",
+        "Automatic recovery from failures"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "@id": "goal-004",
+      "@type": "sro:Goal",
+      "goalId": "goal-004",
+      "goalName": "Maintain Security Standards",
+      "description": "Protect sensitive data and prevent unauthorized access",
+      "priority": "HIGH",
+      "successCriteria": [
+        "All requests authenticated",
+        "HTTPS encryption enforced",
+        "No security vulnerabilities",
+        "Regular security audits passed"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "@id": "goal-005",
+      "@type": "sro:Goal",
+      "goalId": "goal-005",
+      "goalName": "Enable Continuous Integration",
+      "description": "Support automated testing and building processes",
+      "priority": "MEDIUM",
+      "successCriteria": [
+        "Tests run automatically on code changes",
+        "Build process fully automated",
+        "Fast feedback on code changes (< 5 minutes)",
+        "Integration with existing CI/CD pipeline"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "@id": "uc-001",
+      "@type": "sro:UseCase",
+      "useCaseId": "uc-001",
+      "useCaseName": "Deploy to Production",
+      "description": "Developer deploys application to production environment using ICA",
+      "actor": "Developer",
+      "preconditions": [
+        "Code is committed to main branch",
+        "All tests are passing",
+        "ICA is connected to the service",
+        "Developer has necessary permissions"
+      ],
+      "mainFlow": [
+        "Developer tells ICA: 'Deploy to production'",
+        "ICA sends POST request to /trigger-workflow endpoint",
+        "Service authenticates the request using API key",
+        "Service triggers GitHub Actions workflow with production parameters",
+        "GitHub Actions workflow executes deployment steps",
+        "ICA receives success confirmation",
+        "ICA reports deployment status to developer"
+      ],
+      "postconditions": [
+        "Application is deployed to production",
+        "Workflow run is visible on GitHub Actions page",
+        "Developer receives confirmation message",
+        "Deployment logged in system"
+      ],
+      "alternativeFlows": [
+        "Authentication Failure: Service rejects invalid API key, ICA reports error",
+        "Workflow Failure: GitHub workflow fails, developer checks logs and retries",
+        "Network Error: Connection timeout, system retries automatically"
+      ]
+    },
+    {
+      "@id": "uc-002",
+      "@type": "sro:UseCase",
+      "useCaseId": "uc-002",
+      "useCaseName": "Run Automated Tests",
+      "description": "Developer runs test suite via ICA to verify code changes",
+      "actor": "Developer",
+      "preconditions": [
+        "Code changes are committed",
+        "Test workflow is configured in repository",
+        "ICA is connected"
+      ],
+      "mainFlow": [
+        "Developer tells ICA: 'Run tests'",
+        "ICA triggers test workflow with development environment",
+        "Tests execute on GitHub Actions",
+        "ICA monitors test execution",
+        "ICA reports test results to developer"
+      ],
+      "postconditions": [
+        "Tests completed successfully or with failures",
+        "Test results available in GitHub",
+        "Developer informed of test status",
+        "Failed tests highlighted for review"
+      ],
+      "alternativeFlows": [
+        "Test Failure: ICA reports which tests failed with details",
+        "Timeout: Long-running tests timeout, partial results returned"
+      ]
+    },
+    {
+      "@id": "uc-003",
+      "@type": "sro:UseCase",
+      "useCaseId": "uc-003",
+      "useCaseName": "Check Deployment Status",
+      "description": "Developer checks recent workflow runs to monitor deployments",
+      "actor": "Developer",
+      "preconditions": [
+        "Previous workflows have been executed",
+        "ICA is connected"
+      ],
+      "mainFlow": [
+        "Developer asks ICA: 'Show recent deployments'",
+        "ICA sends GET request to /workflow-runs endpoint",
+        "Service queries GitHub API for workflow history",
+        "Service returns formatted run history",
+        "ICA displays results with status indicators"
+      ],
+      "postconditions": [
+        "Developer sees list of recent workflow runs",
+        "Status of each run is clearly indicated",
+        "Links to detailed logs are provided"
+      ],
+      "alternativeFlows": [
+        "No Recent Runs: ICA informs no workflows have been executed recently",
+        "API Error: Service unavailable, ICA suggests retry"
+      ]
+    },
+    {
+      "@id": "uc-004",
+      "@type": "sro:UseCase",
+      "useCaseId": "uc-004",
+      "useCaseName": "Build for Staging",
+      "description": "Developer builds application for staging environment testing",
+      "actor": "Developer",
+      "preconditions": [
+        "Feature branch is ready",
+        "Staging environment is available",
+        "Build workflow is configured"
+      ],
+      "mainFlow": [
+        "Developer tells ICA: 'Build for staging'",
+        "ICA triggers build workflow with staging parameters",
+        "Build process executes on GitHub Actions",
+        "Build artifacts are created",
+        "Staging environment is updated",
+        "ICA confirms build completion"
+      ],
+      "postconditions": [
+        "Application is built for staging",
+        "Build artifacts are available",
+        "Staging environment is ready for testing"
+      ],
+      "alternativeFlows": [
+        "Build Failure: Compilation errors reported, developer fixes and retries",
+        "Resource Limit: GitHub Actions quota exceeded, build queued"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "@context": {
+    "sro": "http://example.org/sro#",
+    "schema": "http://schema.org/"
+  },
+  "@graph": [
+    {
+      "@id": "req-func-001",
+      "@type": "sro:FunctionalRequirement",
+      "requirementId": "req-func-001",
+      "requirementCode": "FR-001",
+      "name": "Trigger GitHub Workflow",
+      "description": "System must allow triggering GitHub Actions workflows via API with custom inputs",
+      "rationale": "Enable automated deployments and builds through ICA natural language commands",
+      "acceptanceCriteria": "API accepts workflow_id, ref, and inputs parameters. Workflow triggers successfully on GitHub. Returns confirmation with timestamp and workflow details.",
+      "priority": "MUST",
+      "status": "VERIFIED",
+      "apiEndpoint": "https://uprising-theme-maturity.ngrok-free.dev/trigger-workflow",
+      "httpMethod": "POST",
+      "requestBody": {
+        "workflow_id": "string",
+        "ref": "string",
+        "inputs": {
+          "task": "string",
+          "environment": "string",
+          "message": "string",
+          "debug": "string"
+        }
+      },
+      "responseFormat": {
+        "success": "boolean",
+        "message": "string",
+        "workflow": "string",
+        "repository": "string",
+        "timestamp": "string"
+      }
+    },
+    {
+      "@id": "req-func-002",
+      "@type": "sro:FunctionalRequirement",
+      "requirementId": "req-func-002",
+      "requirementCode": "FR-002",
+      "name": "List Available Workflows",
+      "description": "System must provide endpoint to list all available GitHub Actions workflows",
+      "rationale": "Allow users to discover available workflows before triggering",
+      "acceptanceCriteria": "Returns list of workflows with name, path, and state. Includes workflow metadata.",
+      "priority": "SHOULD",
+      "status": "VERIFIED",
+      "apiEndpoint": "https://uprising-theme-maturity.ngrok-free.dev/workflows",
+      "httpMethod": "GET",
+      "requestBody": null,
+      "responseFormat": {
+        "success": "boolean",
+        "repository": "string",
+        "workflows": "array",
+        "total": "number"
+      }
+    },
+    {
+      "@id": "req-func-003",
+      "@type": "sro:FunctionalRequirement",
+      "requirementId": "req-func-003",
+      "requirementCode": "FR-003",
+      "name": "Get Workflow Run History",
+      "description": "System must allow querying recent workflow runs with status and details",
+      "rationale": "Enable monitoring of deployment and build history",
+      "acceptanceCriteria": "Returns paginated list of runs. Includes status, conclusion, timestamps, and GitHub URLs.",
+      "priority": "SHOULD",
+      "status": "VERIFIED",
+      "apiEndpoint": "https://uprising-theme-maturity.ngrok-free.dev/workflow-runs",
+      "httpMethod": "GET",
+      "requestBody": null,
+      "responseFormat": {
+        "success": "boolean",
+        "workflow": "string",
+        "runs": "array",
+        "total": "number"
+      }
+    },
+    {
+      "@id": "req-nf-001",
+      "@type": "sro:NonFunctionalRequirement",
+      "requirementId": "req-nf-001",
+      "requirementCode": "NFR-001",
+      "name": "API Response Time",
+      "description": "API must respond within acceptable time limits",
+      "qualityAttribute": "PERFORMANCE",
+      "priority": "MUST",
+      "status": "VERIFIED",
+      "metric": "Response time",
+      "targetValue": "< 2 seconds for 95% of requests"
+    },
+    {
+      "@id": "req-nf-002",
+      "@type": "sro:NonFunctionalRequirement",
+      "requirementId": "req-nf-002",
+      "requirementCode": "NFR-002",
+      "name": "Service Availability",
+      "description": "Service must be available when needed",
+      "qualityAttribute": "RELIABILITY",
+      "priority": "MUST",
+      "status": "IMPLEMENTED",
+      "metric": "Uptime",
+      "targetValue": "99% during working hours"
+    },
+    {
+      "@id": "req-sec-001",
+      "@type": "sro:SecurityRequirement",
+      "requirementId": "req-sec-001",
+      "requirementCode": "SEC-001",
+      "name": "API Key Authentication",
+      "description": "All API endpoints must require valid API key for authentication",
+      "securityControl": "AUTHENTICATION",
+      "priority": "MUST",
+      "status": "VERIFIED",
+      "threatMitigated": "Unauthorized access to workflow triggers"
+    },
+    {
+      "@id": "req-sec-002",
+      "@type": "sro:SecurityRequirement",
+      "requirementId": "req-sec-002",
+      "requirementCode": "SEC-002",
+      "name": "HTTPS Communication",
+      "description": "All communication must use HTTPS encryption via ngrok tunnel",
+      "securityControl": "ENCRYPTION",
+      "priority": "MUST",
+      "status": "VERIFIED",
+      "threatMitigated": "Man-in-the-middle attacks and data interception"
+    },
+    {
+      "@id": "req-sec-003",
+      "@type": "sro:SecurityRequirement",
+      "requirementId": "req-sec-003",
+      "requirementCode": "SEC-003",
+      "name": "GitHub Token Security",
+      "description": "GitHub personal access token must be stored securely in environment variables",
+      "securityControl": "AUTHORIZATION",
+      "priority": "MUST",
+      "status": "VERIFIED",
+      "threatMitigated": "Token exposure and unauthorized repository access"
+    }
+  ]
+}

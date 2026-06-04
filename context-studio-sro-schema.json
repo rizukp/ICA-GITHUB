@@ -1,0 +1,541 @@
+{
+  "@context": {
+    "sro": "http://example.org/sro#",
+    "schema": "http://schema.org/",
+    "id": "@id",
+    "type": "@type",
+    "name": "schema:name",
+    "description": "schema:description",
+    "attributes": "sro:attributes",
+    "identityKey": "sro:identityKey",
+    "humanRef": "sro:humanRef",
+    "invariant": "sro:invariant",
+    "hasState": {
+      "@id": "sro:hasState",
+      "@type": "@id"
+    },
+    "initialState": {
+      "@id": "sro:initialState",
+      "@type": "@id"
+    },
+    "terminalStates": {
+      "@id": "sro:terminalStates",
+      "@type": "@id"
+    },
+    "relatesTo": {
+      "@id": "sro:relatesTo",
+      "@type": "@id"
+    },
+    "emitsEvent": {
+      "@id": "sro:emitsEvent",
+      "@type": "@id"
+    },
+    "from": {
+      "@id": "sro:from",
+      "@type": "@id"
+    },
+    "to": {
+      "@id": "sro:to",
+      "@type": "@id"
+    },
+    "precondition": "sro:precondition",
+    "postcondition": "sro:postcondition",
+    "Entity": "sro:Entity",
+    "Operation": "sro:Operation",
+    "State": "sro:State"
+  },
+  "@graph": [
+    {
+      "id": "sro:GitHubWorkflowTriggerRequirement",
+      "type": "Entity",
+      "name": "GitHub Workflow Trigger Requirement",
+      "description": "Requirements for triggering GitHub Actions workflows via ICA",
+      "identityKey": "requirementId: UUID",
+      "humanRef": "requirementCode",
+      "attributes": {
+        "requirementId": "string",
+        "requirementCode": "string",
+        "name": "string",
+        "description": "string",
+        "rationale": "string",
+        "acceptanceCriteria": "string",
+        "priority": "MUST|SHOULD|COULD|WONT",
+        "status": "DRAFT|APPROVED|IMPLEMENTED|VERIFIED|REJECTED",
+        "apiEndpoint": "string",
+        "httpMethod": "GET|POST|PUT|DELETE"
+      },
+      "invariant": [
+        "requirementCode must be unique",
+        "priority must be one of MoSCoW values",
+        "A requirement must have at least one stakeholder source",
+        "API endpoint must be valid URL"
+      ],
+      "hasState": [
+        "sro:RequirementDraft",
+        "sro:RequirementApproved",
+        "sro:RequirementImplemented",
+        "sro:RequirementVerified",
+        "sro:RequirementRejected"
+      ],
+      "initialState": "sro:RequirementDraft",
+      "terminalStates": [
+        "sro:RequirementVerified",
+        "sro:RequirementRejected"
+      ],
+      "relatesTo": [
+        "sro:Stakeholder",
+        "sro:Goal",
+        "sro:SystemComponent",
+        "sro:TestCase"
+      ],
+      "emitsEvent": [
+        "sro:RequirementApproved",
+        "sro:RequirementImplemented",
+        "sro:RequirementVerified"
+      ]
+    },
+    {
+      "id": "sro:FunctionalRequirement",
+      "type": "Entity",
+      "name": "FunctionalRequirement",
+      "description": "Functional requirements for GitHub workflow operations",
+      "identityKey": "requirementId: UUID",
+      "humanRef": "requirementCode",
+      "attributes": {
+        "requirementId": "string",
+        "requirementCode": "string",
+        "name": "string",
+        "description": "string",
+        "rationale": "string",
+        "acceptanceCriteria": "string",
+        "priority": "MUST|SHOULD|COULD|WONT",
+        "status": "DRAFT|APPROVED|IMPLEMENTED|VERIFIED|REJECTED",
+        "apiEndpoint": "string",
+        "httpMethod": "string",
+        "requestBody": "object",
+        "responseFormat": "object"
+      },
+      "invariant": [
+        "Must define clear acceptance criteria",
+        "Must specify expected system behavior",
+        "API endpoint must be accessible",
+        "Request/response format must be documented"
+      ],
+      "hasState": [
+        "sro:RequirementDraft",
+        "sro:RequirementApproved",
+        "sro:RequirementImplemented",
+        "sro:RequirementVerified",
+        "sro:RequirementRejected"
+      ],
+      "initialState": "sro:RequirementDraft",
+      "terminalStates": [
+        "sro:RequirementVerified",
+        "sro:RequirementRejected"
+      ],
+      "relatesTo": [
+        "sro:Stakeholder",
+        "sro:Goal",
+        "sro:SystemComponent",
+        "sro:TestCase",
+        "sro:WorkflowAction"
+      ]
+    },
+    {
+      "id": "sro:NonFunctionalRequirement",
+      "type": "Entity",
+      "name": "NonFunctionalRequirement",
+      "description": "Quality attributes for the workflow trigger system",
+      "identityKey": "requirementId: UUID",
+      "humanRef": "requirementCode",
+      "attributes": {
+        "requirementId": "string",
+        "requirementCode": "string",
+        "name": "string",
+        "description": "string",
+        "qualityAttribute": "PERFORMANCE|SECURITY|USABILITY|RELIABILITY|MAINTAINABILITY",
+        "priority": "MUST|SHOULD|COULD|WONT",
+        "status": "DRAFT|APPROVED|IMPLEMENTED|VERIFIED|REJECTED",
+        "metric": "string",
+        "targetValue": "string"
+      },
+      "invariant": [
+        "Must specify measurable quality criteria",
+        "qualityAttribute must be one of defined values",
+        "Metric must be quantifiable"
+      ],
+      "hasState": [
+        "sro:RequirementDraft",
+        "sro:RequirementApproved",
+        "sro:RequirementImplemented",
+        "sro:RequirementVerified",
+        "sro:RequirementRejected"
+      ],
+      "initialState": "sro:RequirementDraft",
+      "terminalStates": [
+        "sro:RequirementVerified",
+        "sro:RequirementRejected"
+      ],
+      "relatesTo": [
+        "sro:Stakeholder",
+        "sro:Goal",
+        "sro:SystemComponent"
+      ]
+    },
+    {
+      "id": "sro:SecurityRequirement",
+      "type": "Entity",
+      "name": "SecurityRequirement",
+      "description": "Security requirements for API authentication and data protection",
+      "identityKey": "requirementId: UUID",
+      "humanRef": "requirementCode",
+      "attributes": {
+        "requirementId": "string",
+        "requirementCode": "string",
+        "name": "string",
+        "description": "string",
+        "securityControl": "AUTHENTICATION|AUTHORIZATION|ENCRYPTION|AUDIT",
+        "priority": "MUST|SHOULD|COULD|WONT",
+        "status": "DRAFT|APPROVED|IMPLEMENTED|VERIFIED|REJECTED",
+        "threatMitigated": "string"
+      },
+      "invariant": [
+        "Must specify security control type",
+        "Must identify threat being mitigated",
+        "Critical security requirements must be MUST priority"
+      ],
+      "hasState": [
+        "sro:RequirementDraft",
+        "sro:RequirementApproved",
+        "sro:RequirementImplemented",
+        "sro:RequirementVerified",
+        "sro:RequirementRejected"
+      ],
+      "initialState": "sro:RequirementDraft",
+      "terminalStates": [
+        "sro:RequirementVerified",
+        "sro:RequirementRejected"
+      ],
+      "relatesTo": [
+        "sro:Stakeholder",
+        "sro:Goal",
+        "sro:SystemComponent",
+        "sro:TestCase"
+      ]
+    },
+    {
+      "id": "sro:Stakeholder",
+      "type": "Entity",
+      "name": "Stakeholder",
+      "description": "Individuals or groups with interest in the workflow trigger system",
+      "identityKey": "stakeholderId: UUID",
+      "humanRef": "stakeholderName",
+      "attributes": {
+        "stakeholderId": "string",
+        "stakeholderName": "string",
+        "role": "string",
+        "organization": "string",
+        "contactInfo": "string",
+        "responsibilities": "array"
+      },
+      "invariant": [
+        "stakeholderName must be unique",
+        "role must be defined",
+        "At least one responsibility must be specified"
+      ],
+      "relatesTo": [
+        "sro:GitHubWorkflowTriggerRequirement",
+        "sro:Goal"
+      ]
+    },
+    {
+      "id": "sro:Goal",
+      "type": "Entity",
+      "name": "Goal",
+      "description": "High-level objectives for the workflow automation system",
+      "identityKey": "goalId: UUID",
+      "humanRef": "goalName",
+      "attributes": {
+        "goalId": "string",
+        "goalName": "string",
+        "description": "string",
+        "priority": "HIGH|MEDIUM|LOW",
+        "successCriteria": "array",
+        "status": "ACTIVE|ACHIEVED|DEFERRED"
+      },
+      "invariant": [
+        "goalName must be unique",
+        "A goal must be refined by at least one requirement",
+        "Success criteria must be measurable"
+      ],
+      "relatesTo": [
+        "sro:GitHubWorkflowTriggerRequirement",
+        "sro:Stakeholder"
+      ]
+    },
+    {
+      "id": "sro:SystemComponent",
+      "type": "Entity",
+      "name": "SystemComponent",
+      "description": "Components that implement workflow trigger functionality",
+      "identityKey": "componentId: UUID",
+      "humanRef": "componentName",
+      "attributes": {
+        "componentId": "string",
+        "componentName": "string",
+        "description": "string",
+        "technology": "string",
+        "repository": "string",
+        "apiEndpoints": "array"
+      },
+      "invariant": [
+        "componentName must be unique",
+        "Technology stack must be specified",
+        "Repository URL must be valid"
+      ],
+      "relatesTo": [
+        "sro:GitHubWorkflowTriggerRequirement"
+      ]
+    },
+    {
+      "id": "sro:TestCase",
+      "type": "Entity",
+      "name": "TestCase",
+      "description": "Tests that verify workflow trigger functionality",
+      "identityKey": "testCaseId: UUID",
+      "humanRef": "testCaseCode",
+      "attributes": {
+        "testCaseId": "string",
+        "testCaseCode": "string",
+        "name": "string",
+        "description": "string",
+        "testType": "UNIT|INTEGRATION|SYSTEM|ACCEPTANCE|SECURITY|PERFORMANCE",
+        "status": "PENDING|PASSED|FAILED",
+        "testSteps": "array",
+        "expectedResult": "string",
+        "actualResult": "string"
+      },
+      "invariant": [
+        "testCaseCode must be unique",
+        "Must verify at least one requirement",
+        "Test steps must be documented",
+        "Expected result must be defined"
+      ],
+      "relatesTo": [
+        "sro:GitHubWorkflowTriggerRequirement"
+      ]
+    },
+    {
+      "id": "sro:WorkflowAction",
+      "type": "Entity",
+      "name": "WorkflowAction",
+      "description": "Specific GitHub Actions workflow operations",
+      "identityKey": "actionId: UUID",
+      "humanRef": "actionName",
+      "attributes": {
+        "actionId": "string",
+        "actionName": "string",
+        "description": "string",
+        "workflowFile": "string",
+        "inputs": "object",
+        "outputs": "object",
+        "apiEndpoint": "string"
+      },
+      "invariant": [
+        "actionName must be unique",
+        "workflowFile must exist in repository",
+        "API endpoint must be valid"
+      ],
+      "relatesTo": [
+        "sro:FunctionalRequirement",
+        "sro:SystemComponent"
+      ]
+    },
+    {
+      "id": "sro:UseCase",
+      "type": "Entity",
+      "name": "UseCase",
+      "description": "Scenarios for using the workflow trigger system",
+      "identityKey": "useCaseId: UUID",
+      "humanRef": "useCaseName",
+      "attributes": {
+        "useCaseId": "string",
+        "useCaseName": "string",
+        "description": "string",
+        "actor": "string",
+        "preconditions": "array",
+        "mainFlow": "array",
+        "postconditions": "array",
+        "alternativeFlows": "array"
+      },
+      "invariant": [
+        "useCaseName must be unique",
+        "Actor must be specified",
+        "Main flow must be documented"
+      ],
+      "relatesTo": [
+        "sro:FunctionalRequirement",
+        "sro:Stakeholder",
+        "sro:WorkflowAction"
+      ]
+    },
+    {
+      "id": "sro:HasSource",
+      "type": "Operation",
+      "name": "HasSource",
+      "description": "Links a requirement to its originating stakeholder",
+      "from": "sro:GitHubWorkflowTriggerRequirement",
+      "to": "sro:Stakeholder",
+      "precondition": [
+        "Requirement must exist",
+        "Stakeholder must exist"
+      ],
+      "postcondition": [
+        "Requirement is associated with at least one Stakeholder",
+        "Stakeholder is recorded as source of the requirement"
+      ]
+    },
+    {
+      "id": "sro:Refines",
+      "type": "Operation",
+      "name": "Refines",
+      "description": "Establishes that a requirement refines a higher-level goal",
+      "from": "sro:GitHubWorkflowTriggerRequirement",
+      "to": "sro:Goal",
+      "precondition": [
+        "Requirement must exist",
+        "Goal must exist"
+      ],
+      "postcondition": [
+        "Requirement contributes to achieving the Goal",
+        "Goal is refined by one or more Requirements"
+      ]
+    },
+    {
+      "id": "sro:DependsOn",
+      "type": "Operation",
+      "name": "DependsOn",
+      "description": "Defines dependency between requirements",
+      "from": "sro:GitHubWorkflowTriggerRequirement",
+      "to": "sro:GitHubWorkflowTriggerRequirement",
+      "precondition": [
+        "Both requirements must exist",
+        "No circular dependencies allowed"
+      ],
+      "postcondition": [
+        "Dependent requirement cannot be implemented before prerequisite",
+        "Dependency relationship is recorded"
+      ]
+    },
+    {
+      "id": "sro:ConflictsWith",
+      "type": "Operation",
+      "name": "ConflictsWith",
+      "description": "Identifies conflicting requirements that need resolution",
+      "from": "sro:GitHubWorkflowTriggerRequirement",
+      "to": "sro:GitHubWorkflowTriggerRequirement",
+      "precondition": [
+        "Both requirements must exist",
+        "Conflict must be documented"
+      ],
+      "postcondition": [
+        "Conflict is recorded for resolution",
+        "Requirements cannot both be implemented without resolution"
+      ]
+    },
+    {
+      "id": "sro:RealizedBy",
+      "type": "Operation",
+      "name": "RealizedBy",
+      "description": "Links a requirement to the system component that implements it",
+      "from": "sro:GitHubWorkflowTriggerRequirement",
+      "to": "sro:SystemComponent",
+      "precondition": [
+        "Requirement must be in APPROVED or IMPLEMENTED state",
+        "SystemComponent must exist"
+      ],
+      "postcondition": [
+        "Requirement is implemented by SystemComponent",
+        "SystemComponent realizes one or more Requirements"
+      ]
+    },
+    {
+      "id": "sro:VerifiedBy",
+      "type": "Operation",
+      "name": "VerifiedBy",
+      "description": "Associates a requirement with test cases that verify its implementation",
+      "from": "sro:GitHubWorkflowTriggerRequirement",
+      "to": "sro:TestCase",
+      "precondition": [
+        "Requirement must be in IMPLEMENTED state",
+        "TestCase must exist"
+      ],
+      "postcondition": [
+        "Requirement is verified by one or more TestCases",
+        "TestCase validates the Requirement implementation"
+      ]
+    },
+    {
+      "id": "sro:ImplementsAction",
+      "type": "Operation",
+      "name": "ImplementsAction",
+      "description": "Links a functional requirement to a workflow action",
+      "from": "sro:FunctionalRequirement",
+      "to": "sro:WorkflowAction",
+      "precondition": [
+        "Functional requirement must exist",
+        "Workflow action must be defined"
+      ],
+      "postcondition": [
+        "Requirement is implemented through workflow action",
+        "Action realizes the functional requirement"
+      ]
+    },
+    {
+      "id": "sro:SupportsUseCase",
+      "type": "Operation",
+      "name": "SupportsUseCase",
+      "description": "Links requirements to use cases they support",
+      "from": "sro:GitHubWorkflowTriggerRequirement",
+      "to": "sro:UseCase",
+      "precondition": [
+        "Requirement must exist",
+        "Use case must be documented"
+      ],
+      "postcondition": [
+        "Requirement enables use case execution",
+        "Use case is supported by requirements"
+      ]
+    },
+    {
+      "id": "sro:RequirementDraft",
+      "type": "State",
+      "name": "RequirementDraft",
+      "description": "Requirement is being drafted and not yet approved"
+    },
+    {
+      "id": "sro:RequirementApproved",
+      "type": "State",
+      "name": "RequirementApproved",
+      "description": "Requirement has been reviewed and approved for implementation"
+    },
+    {
+      "id": "sro:RequirementImplemented",
+      "type": "State",
+      "name": "RequirementImplemented",
+      "description": "Requirement has been implemented in the system"
+    },
+    {
+      "id": "sro:RequirementVerified",
+      "type": "State",
+      "name": "RequirementVerified",
+      "description": "Requirement implementation has been tested and verified"
+    },
+    {
+      "id": "sro:RequirementRejected",
+      "type": "State",
+      "name": "RequirementRejected",
+      "description": "Requirement has been rejected and will not be implemented"
+    }
+  ]
+}

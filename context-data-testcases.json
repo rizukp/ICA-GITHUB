@@ -1,0 +1,186 @@
+{
+  "@context": {
+    "sro": "http://example.org/sro#",
+    "schema": "http://schema.org/"
+  },
+  "@graph": [
+    {
+      "@id": "test-001",
+      "@type": "sro:TestCase",
+      "testCaseId": "test-001",
+      "testCaseCode": "TC-001",
+      "name": "Test Workflow Trigger Success",
+      "description": "Verify that a workflow can be triggered successfully with valid parameters",
+      "testType": "INTEGRATION",
+      "status": "PASSED",
+      "testSteps": [
+        "Send POST request to /trigger-workflow endpoint",
+        "Include valid workflow_id: 'main.yml'",
+        "Include valid ref: 'main'",
+        "Include authentication header with valid API key",
+        "Include inputs: task='deploy', environment='production'"
+      ],
+      "expectedResult": "200 OK response with success:true, workflow triggered on GitHub, confirmation message returned",
+      "actualResult": "200 OK received, workflow triggered successfully, timestamp and repository info returned"
+    },
+    {
+      "@id": "test-002",
+      "@type": "sro:TestCase",
+      "testCaseId": "test-002",
+      "testCaseCode": "TC-002",
+      "name": "Test Authentication Failure",
+      "description": "Verify that requests without valid API key are rejected",
+      "testType": "SECURITY",
+      "status": "PASSED",
+      "testSteps": [
+        "Send POST request to /trigger-workflow",
+        "Omit x-api-key header",
+        "Verify 401 Unauthorized response"
+      ],
+      "expectedResult": "401 Unauthorized with error message about invalid API key",
+      "actualResult": "401 Unauthorized returned with appropriate error message"
+    },
+    {
+      "@id": "test-003",
+      "@type": "sro:TestCase",
+      "testCaseId": "test-003",
+      "testCaseCode": "TC-003",
+      "name": "Test List Workflows",
+      "description": "Verify that available workflows can be listed",
+      "testType": "INTEGRATION",
+      "status": "PASSED",
+      "testSteps": [
+        "Send GET request to /workflows endpoint",
+        "Include valid API key in header",
+        "Verify response contains workflow list"
+      ],
+      "expectedResult": "200 OK with array of workflows including name, path, and state",
+      "actualResult": "200 OK received with complete workflow list and metadata"
+    },
+    {
+      "@id": "test-004",
+      "@type": "sro:TestCase",
+      "testCaseId": "test-004",
+      "testCaseCode": "TC-004",
+      "name": "Test Get Workflow Runs",
+      "description": "Verify that workflow run history can be retrieved",
+      "testType": "INTEGRATION",
+      "status": "PASSED",
+      "testSteps": [
+        "Send GET request to /workflow-runs endpoint",
+        "Include workflow_id parameter: 'main.yml'",
+        "Include per_page parameter: 10",
+        "Include valid API key"
+      ],
+      "expectedResult": "200 OK with array of recent runs including status, conclusion, and URLs",
+      "actualResult": "200 OK received with paginated list of workflow runs"
+    },
+    {
+      "@id": "test-005",
+      "@type": "sro:TestCase",
+      "testCaseId": "test-005",
+      "testCaseCode": "TC-005",
+      "name": "Test API Response Time",
+      "description": "Verify that API responds within acceptable time limits",
+      "testType": "PERFORMANCE",
+      "status": "PASSED",
+      "testSteps": [
+        "Send 100 requests to /health endpoint",
+        "Measure response time for each request",
+        "Calculate 95th percentile response time",
+        "Verify it is under 2 seconds"
+      ],
+      "expectedResult": "95th percentile response time < 2 seconds",
+      "actualResult": "95th percentile: 1.2 seconds - PASSED"
+    },
+    {
+      "@id": "test-006",
+      "@type": "sro:TestCase",
+      "testCaseId": "test-006",
+      "testCaseCode": "TC-006",
+      "name": "Test Concurrent Requests",
+      "description": "Verify system handles multiple concurrent requests",
+      "testType": "PERFORMANCE",
+      "status": "PASSED",
+      "testSteps": [
+        "Send 10 simultaneous requests to /trigger-workflow",
+        "All with valid parameters and authentication",
+        "Verify all requests complete successfully",
+        "Check for response time degradation"
+      ],
+      "expectedResult": "All 10 requests succeed with no significant performance degradation",
+      "actualResult": "All requests completed successfully, average response time: 1.5 seconds"
+    },
+    {
+      "@id": "test-007",
+      "@type": "sro:TestCase",
+      "testCaseId": "test-007",
+      "testCaseCode": "TC-007",
+      "name": "Test Invalid Workflow ID",
+      "description": "Verify appropriate error handling for invalid workflow",
+      "testType": "INTEGRATION",
+      "status": "PASSED",
+      "testSteps": [
+        "Send POST request with invalid workflow_id: 'nonexistent.yml'",
+        "Include valid authentication",
+        "Verify error response"
+      ],
+      "expectedResult": "500 error with message indicating workflow not found",
+      "actualResult": "500 error returned with clear error message about workflow not found"
+    },
+    {
+      "@id": "test-008",
+      "@type": "sro:TestCase",
+      "testCaseId": "test-008",
+      "testCaseCode": "TC-008",
+      "name": "Test HTTPS Encryption",
+      "description": "Verify all communication uses HTTPS via ngrok",
+      "testType": "SECURITY",
+      "status": "PASSED",
+      "testSteps": [
+        "Verify ngrok URL uses HTTPS protocol",
+        "Attempt HTTP connection (should fail or redirect)",
+        "Verify SSL certificate is valid",
+        "Check that sensitive data is encrypted in transit"
+      ],
+      "expectedResult": "All communication uses HTTPS, HTTP requests rejected or redirected",
+      "actualResult": "ngrok provides HTTPS tunnel, all traffic encrypted"
+    },
+    {
+      "@id": "test-009",
+      "@type": "sro:TestCase",
+      "testCaseId": "test-009",
+      "testCaseCode": "TC-009",
+      "name": "Test Health Check Endpoint",
+      "description": "Verify health check endpoint returns service status",
+      "testType": "SYSTEM",
+      "status": "PASSED",
+      "testSteps": [
+        "Send GET request to /health endpoint",
+        "No authentication required",
+        "Verify response includes status and timestamp"
+      ],
+      "expectedResult": "200 OK with status:'ok', timestamp, and service name",
+      "actualResult": "200 OK received with all expected fields"
+    },
+    {
+      "@id": "test-010",
+      "@type": "sro:TestCase",
+      "testCaseId": "test-010",
+      "testCaseCode": "TC-010",
+      "name": "Test ICA Natural Language Integration",
+      "description": "Verify ICA can trigger workflows using natural language",
+      "testType": "ACCEPTANCE",
+      "status": "PASSED",
+      "testSteps": [
+        "Configure ICA with MCP server",
+        "Tell ICA: 'Deploy to production'",
+        "Verify ICA translates to API call",
+        "Verify workflow triggers successfully",
+        "Verify ICA reports result to user"
+      ],
+      "expectedResult": "ICA successfully triggers workflow and reports confirmation",
+      "actualResult": "ICA triggered workflow successfully, user received clear confirmation"
+    }
+  ]
+}

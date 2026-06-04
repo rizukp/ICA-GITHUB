@@ -1,0 +1,69 @@
+{
+  "@context": {
+    "sro": "http://example.org/sro#",
+    "schema": "http://schema.org/"
+  },
+  "@graph": [
+    {
+      "@id": "stakeholder-001",
+      "@type": "sro:Stakeholder",
+      "stakeholderId": "stakeholder-001",
+      "stakeholderName": "Developer",
+      "role": "Primary User",
+      "organization": "Development Team",
+      "contactInfo": "dev-team@example.com",
+      "responsibilities": [
+        "Trigger workflows via ICA natural language commands",
+        "Monitor workflow execution and results",
+        "Configure deployment parameters",
+        "Review workflow logs and troubleshoot issues"
+      ]
+    },
+    {
+      "@id": "stakeholder-002",
+      "@type": "sro:Stakeholder",
+      "stakeholderId": "stakeholder-002",
+      "stakeholderName": "DevOps Engineer",
+      "role": "System Administrator",
+      "organization": "Operations Team",
+      "contactInfo": "devops@example.com",
+      "responsibilities": [
+        "Maintain service availability and performance",
+        "Configure GitHub Actions workflows",
+        "Monitor system health and security",
+        "Manage API keys and authentication",
+        "Update ngrok tunnel configuration"
+      ]
+    },
+    {
+      "@id": "stakeholder-003",
+      "@type": "sro:Stakeholder",
+      "stakeholderId": "stakeholder-003",
+      "stakeholderName": "Development Team",
+      "role": "Beneficiary",
+      "organization": "Engineering Department",
+      "contactInfo": "engineering@example.com",
+      "responsibilities": [
+        "Use automated workflows for CI/CD",
+        "Provide feedback on system usability",
+        "Report issues and bugs",
+        "Suggest improvements and new features"
+      ]
+    },
+    {
+      "@id": "stakeholder-004",
+      "@type": "sro:Stakeholder",
+      "stakeholderId": "stakeholder-004",
+      "stakeholderName": "Security Team",
+      "role": "Security Reviewer",
+      "organization": "Security Department",
+      "contactInfo": "security@example.com",
+      "responsibilities": [
+        "Review API security implementation",
+        "Audit authentication mechanisms",
+        "Ensure compliance with security policies",
+        "Monitor for security vulnerabilities"
+      ]
+    }
+  ]
+}
