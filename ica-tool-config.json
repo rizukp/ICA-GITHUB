@@ -1,0 +1,297 @@
+{
+  "version": "1.0",
+  "service": "ICA GitHub Trigger Service",
+  "description": "Custom tools for ICA to trigger GitHub Actions workflows via local API service",
+  "baseUrl": "https://uprising-theme-maturity.ngrok-free.dev",
+  "authentication": {
+    "type": "api_key",
+    "header": "x-api-key",
+    "envVar": "API_KEY"
+  },
+  "tools": [
+    {
+      "name": "trigger_github_workflow",
+      "displayName": "Trigger GitHub Workflow",
+      "description": "Trigger a GitHub Actions workflow with custom inputs. Use this when the user asks to deploy, build, test, or run any automated task on GitHub.",
+      "type": "http",
+      "method": "POST",
+      "endpoint": "/trigger-workflow",
+      "headers": {
+        "Content-Type": "application/json",
+        "x-api-key": "${API_KEY}"
+      },
+      "parameters": [
+        {
+          "name": "workflow_id",
+          "type": "string",
+          "required": true,
+          "default": "main.yml",
+          "description": "The workflow file name (e.g., main.yml)"
+        },
+        {
+          "name": "ref",
+          "type": "string",
+          "required": true,
+          "default": "main",
+          "description": "The git branch or tag to run the workflow on"
+        },
+        {
+          "name": "task",
+          "type": "string",
+          "required": false,
+          "default": "deploy",
+          "description": "Task to execute: build, test, deploy, or custom task name",
+          "examples": ["build", "test", "deploy", "lint", "release"]
+        },
+        {
+          "name": "environment",
+          "type": "string",
+          "required": false,
+          "default": "production",
+          "enum": ["development", "staging", "production"],
+          "description": "Target environment for the workflow"
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "required": false,
+          "default": "Triggered by ICA",
+          "description": "Custom message describing why the workflow was triggered"
+        },
+        {
+          "name": "debug",
+          "type": "string",
+          "required": false,
+          "default": "false",
+          "enum": ["true", "false"],
+          "description": "Enable debug mode for verbose logging"
+        }
+      ],
+      "bodyTemplate": {
+        "workflow_id": "${workflow_id}",
+        "ref": "${ref}",
+        "inputs": {
+          "task": "${task}",
+          "environment": "${environment}",
+          "message": "${message}",
+          "debug": "${debug}"
+        }
+      },
+      "responseMapping": {
+        "success": "$.success",
+        "message": "$.message",
+        "workflow": "$.workflow",
+        "repository": "$.repository",
+        "timestamp": "$.timestamp"
+      },
+      "examples": [
+        {
+          "description": "Deploy to production",
+          "parameters": {
+            "workflow_id": "main.yml",
+            "ref": "main",
+            "task": "deploy",
+            "environment": "production",
+            "message": "Production deployment requested by user"
+          }
+        },
+        {
+          "description": "Run tests in development",
+          "parameters": {
+            "workflow_id": "main.yml",
+            "ref": "main",
+            "task": "test",
+            "environment": "development",
+            "message": "Running test suite"
+          }
+        },
+        {
+          "description": "Build for staging with debug",
+          "parameters": {
+            "workflow_id": "main.yml",
+            "ref": "develop",
+            "task": "build",
+            "environment": "staging",
+            "message": "Staging build",
+            "debug": "true"
+          }
+        }
+      ]
+    },
+    {
+      "name": "list_github_workflows",
+      "displayName": "List GitHub Workflows",
+      "description": "List all available GitHub Actions workflows in the repository. Use this to discover what workflows can be triggered.",
+      "type": "http",
+      "method": "GET",
+      "endpoint": "/workflows",
+      "headers": {
+        "x-api-key": "${API_KEY}"
+      },
+      "parameters": [],
+      "responseMapping": {
+        "success": "$.success",
+        "repository": "$.repository",
+        "workflows": "$.workflows",
+        "total": "$.total"
+      },
+      "examples": [
+        {
+          "description": "List all workflows",
+          "parameters": {}
+        }
+      ]
+    },
+    {
+      "name": "get_workflow_runs",
+      "displayName": "Get Workflow Runs",
+      "description": "Get recent workflow run history for a specific workflow. Use this to check the status of previous workflow executions.",
+      "type": "http",
+      "method": "GET",
+      "endpoint": "/workflow-runs",
+      "headers": {
+        "x-api-key": "${API_KEY}"
+      },
+      "parameters": [
+        {
+          "name": "workflow_id",
+          "type": "string",
+          "required": false,
+          "default": "main.yml",
+          "description": "The workflow file name to get runs for"
+        },
+        {
+          "name": "per_page",
+          "type": "integer",
+          "required": false,
+          "default": 10,
+          "description": "Number of runs to retrieve (1-100)",
+          "minimum": 1,
+          "maximum": 100
+        }
+      ],
+      "queryParams": {
+        "workflow_id": "${workflow_id}",
+        "per_page": "${per_page}"
+      },
+      "responseMapping": {
+        "success": "$.success",
+        "workflow": "$.workflow",
+        "runs": "$.runs",
+        "total": "$.total"
+      },
+      "examples": [
+        {
+          "description": "Get last 10 runs of main workflow",
+          "parameters": {
+            "workflow_id": "main.yml",
+            "per_page": 10
+          }
+        },
+        {
+          "description": "Get last 5 runs",
+          "parameters": {
+            "workflow_id": "main.yml",
+            "per_page": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "check_service_health",
+      "displayName": "Check Service Health",
+      "description": "Check if the GitHub trigger service is running and accessible. Use this to verify the service is available before triggering workflows.",
+      "type": "http",
+      "method": "GET",
+      "endpoint": "/health",
+      "headers": {},
+      "parameters": [],
+      "responseMapping": {
+        "status": "$.status",
+        "timestamp": "$.timestamp",
+        "service": "$.service"
+      },
+      "examples": [
+        {
+          "description": "Check service health",
+          "parameters": {}
+        }
+      ]
+    }
+  ],
+  "agentInstructions": {
+    "general": "You have access to tools that can trigger GitHub Actions workflows. When a user asks to deploy, build, test, or run any automated task, use the appropriate tool.",
+    "mappings": [
+      {
+        "userIntent": ["deploy", "deployment", "release", "ship"],
+        "tool": "trigger_github_workflow",
+        "parameters": {
+          "task": "deploy",
+          "environment": "production"
+        }
+      },
+      {
+        "userIntent": ["test", "run tests", "testing"],
+        "tool": "trigger_github_workflow",
+        "parameters": {
+          "task": "test",
+          "environment": "development"
+        }
+      },
+      {
+        "userIntent": ["build", "compile", "package"],
+        "tool": "trigger_github_workflow",
+        "parameters": {
+          "task": "build",
+          "environment": "staging"
+        }
+      },
+      {
+        "userIntent": ["what workflows", "list workflows", "available workflows"],
+        "tool": "list_github_workflows"
+      },
+      {
+        "userIntent": ["workflow status", "check runs", "recent runs", "workflow history"],
+        "tool": "get_workflow_runs"
+      },
+      {
+        "userIntent": ["is service running", "check service", "service status"],
+        "tool": "check_service_health"
+      }
+    ],
+    "bestPractices": [
+      "Always check service health before triggering workflows if the user hasn't used the service recently",
+      "Include descriptive messages when triggering workflows to help with debugging",
+      "Use debug mode when troubleshooting issues",
+      "Inform the user about the workflow URL on GitHub after triggering",
+      "If a workflow fails, suggest checking the workflow runs for details"
+    ]
+  },
+  "errorHandling": {
+    "401": "Authentication failed. Check that the API_KEY environment variable is set correctly.",
+    "404": "Workflow not found. Verify the workflow_id exists in the repository.",
+    "500": "Server error. Check that the Node.js service and ngrok are running.",
+    "503": "Service unavailable. The GitHub trigger service may be down."
+  },
+  "setup": {
+    "prerequisites": [
+      "Node.js service running on localhost:3000",
+      "ngrok tunnel active and forwarding to localhost:3000",
+      "API_KEY environment variable configured in Context Studio",
+      "GitHub Personal Access Token with 'repo' and 'workflow' scopes"
+    ],
+    "verification": [
+      "Test health endpoint: GET https://uprising-theme-maturity.ngrok-free.dev/health",
+      "Verify API key authentication works",
+      "Confirm GitHub Actions workflow exists in repository",
+      "Test workflow trigger manually before using with ICA"
+    ]
+  },
+  "metadata": {
+    "repository": "rizukp/ICA-GITHUB",
+    "contextId": "ctx_f41f9d5f18a0",
+    "createdBy": "Bob",
+    "lastUpdated": "2026-06-04T15:17:00Z",
+    "version": "1.0.0"
+  }
+}
