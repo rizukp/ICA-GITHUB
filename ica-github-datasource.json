@@ -1,0 +1,161 @@
+{
+  "version": "1.0",
+  "type": "git",
+  "name": "ICA-GITHUB Repository",
+  "description": "GitHub repository data source for triggering workflows via ICA automations",
+  "provider": "github",
+  "connection": {
+    "type": "github",
+    "repository": "rizukp/ICA-GITHUB",
+    "owner": "rizukp",
+    "repo": "ICA-GITHUB",
+    "branch": "main",
+    "authentication": {
+      "type": "personal_access_token",
+      "token": "${GITHUB_TOKEN}",
+      "scopes": ["repo", "workflow"]
+    }
+  },
+  "webhooks": {
+    "enabled": true,
+    "events": [
+      "push",
+      "pull_request",
+      "workflow_run",
+      "workflow_dispatch"
+    ],
+    "endpoint": "https://uprising-theme-maturity.ngrok-free.dev/webhook"
+  },
+  "automations": [
+    {
+      "id": "trigger_workflow_on_signal",
+      "name": "Trigger GitHub Workflow",
+      "description": "Trigger GitHub Actions workflow when specific signals are detected",
+      "trigger": {
+        "type": "git",
+        "source": "github",
+        "repository": "rizukp/ICA-GITHUB",
+        "events": ["workflow_dispatch_request"]
+      },
+      "conditions": [
+        {
+          "field": "workflow_id",
+          "operator": "equals",
+          "value": "main.yml"
+        }
+      ],
+      "actions": [
+        {
+          "type": "http_request",
+          "method": "POST",
+          "url": "https://uprising-theme-maturity.ngrok-free.dev/trigger-workflow",
+          "headers": {
+            "Content-Type": "application/json",
+            "x-api-key": "${API_KEY}"
+          },
+          "body": {
+            "workflow_id": "${workflow_id}",
+            "ref": "${ref}",
+            "inputs": {
+              "task": "${task}",
+              "environment": "${environment}",
+              "message": "${message}",
+              "debug": "${debug}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "get_workflow_runs_on_signal",
+      "name": "Get Workflow Runs",
+      "description": "Fetch recent workflow runs when requested",
+      "trigger": {
+        "type": "git",
+        "source": "github",
+        "repository": "rizukp/ICA-GITHUB",
+        "events": ["workflow_runs_request"]
+      },
+      "actions": [
+        {
+          "type": "http_request",
+          "method": "GET",
+          "url": "https://uprising-theme-maturity.ngrok-free.dev/workflow-runs",
+          "headers": {
+            "x-api-key": "${API_KEY}"
+          },
+          "queryParams": {
+            "workflow_id": "${workflow_id}",
+            "per_page": "${per_page}"
+          }
+        }
+      ]
+    }
+  ],
+  "signals": [
+    {
+      "name": "workflow_dispatch_request",
+      "description": "Signal to trigger a GitHub Actions workflow",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "workflow_id": {
+            "type": "string",
+            "default": "main.yml",
+            "description": "Workflow file name"
+          },
+          "ref": {
+            "type": "string",
+            "default": "main",
+            "description": "Git branch or tag"
+          },
+          "task": {
+            "type": "string",
+            "enum": ["build", "test", "deploy"],
+            "default": "deploy"
+          },
+          "environment": {
+            "type": "string",
+            "enum": ["development", "staging", "production"],
+            "default": "production"
+          },
+          "message": {
+            "type": "string",
+            "default": "Triggered by ICA"
+          },
+          "debug": {
+            "type": "string",
+            "enum": ["true", "false"],
+            "default": "false"
+          }
+        },
+        "required": ["workflow_id", "ref"]
+      }
+    },
+    {
+      "name": "workflow_runs_request",
+      "description": "Signal to fetch workflow run history",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "workflow_id": {
+            "type": "string",
+            "default": "main.yml"
+          },
+          "per_page": {
+            "type": "integer",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "contextId": "ctx_f41f9d5f18a0",
+    "repository": "rizukp/ICA-GITHUB",
+    "createdBy": "Bob",
+    "lastUpdated": "2026-06-04T15:31:00Z"
+  }
+}
