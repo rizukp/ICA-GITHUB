@@ -1,5 +1,5 @@
 {
-  "name": "ica-github-trigger",
+  "name": "ICA-GITHUB",
   "version": "1.0.0",
   "description": "Node.js service to trigger GitHub Actions workflows via ICA through ngrok",
   "main": "server.js",

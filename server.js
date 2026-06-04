@@ -38,7 +38,7 @@ const octokit = new Octokit({
 
 // GitHub repository configuration
 const GITHUB_OWNER = process.env.GITHUB_OWNER || 'rizukp';
-const GITHUB_REPO = process.env.GITHUB_REPO || 'T1';
+const GITHUB_REPO = process.env.GITHUB_REPO || 'ICA-GITHUB';
 
 // Health check endpoint
 app.get('/health', (req, res) => {

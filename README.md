@@ -40,7 +40,7 @@ notepad .env
 Required environment variables:
 - `GITHUB_TOKEN`: Your GitHub Personal Access Token
 - `GITHUB_OWNER`: Your GitHub username (default: rizukp)
-- `GITHUB_REPO`: Your repository name (default: T1)
+- `GITHUB_REPO`: Your repository name (default: ICA-GITHUB)
 - `PORT`: Server port (default: 3000)
 - `API_KEY`: Secure API key for authentication
 
@@ -69,8 +69,8 @@ Copy the `.github/workflows/main.yml` file to your GitHub repository:
 
 ```bash
 # If you haven't cloned your repository yet
-git clone https://github.com/rizukp/T1.git
-cd T1
+git clone https://github.com/rizukp/ICA-GITHUB.git
+cd ICA-GITHUB
 
 # Copy the workflow file
 mkdir -p .github/workflows
@@ -95,7 +95,7 @@ You should see:
 ==================================================
 📡 Server running on port 3000
 🔗 Local URL: http://localhost:3000
-📦 Repository: rizukp/T1
+📦 Repository: rizukp/ICA-GITHUB
 🔐 API Key Auth: Enabled
 ==================================================
 ```
@@ -155,7 +155,7 @@ Response:
   "status": 204,
   "workflow": "main.yml",
   "ref": "main",
-  "repository": "rizukp/T1",
+  "repository": "rizukp/ICA-GITHUB",
   "timestamp": "2026-06-04T09:15:00.000Z"
 }
 ```
@@ -217,7 +217,7 @@ curl -X POST https://your-ngrok-url.ngrok.io/trigger-workflow \
 Open http://localhost:4040 in your browser to see all requests through ngrok.
 
 ### View GitHub Actions runs
-Go to https://github.com/rizukp/T1/actions to see workflow executions.
+Go to https://github.com/rizukp/ICA-GITHUB/actions to see workflow executions.
 
 ### Server logs
 The Node.js service logs all requests and responses to the console.
@@ -280,4 +280,4 @@ MIT
 
 ## 👤 Author
 
-Repository: https://github.com/rizukp/T1
+Repository: https://github.com/rizukp/ICA-GITHUB

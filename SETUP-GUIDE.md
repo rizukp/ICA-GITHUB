@@ -63,7 +63,7 @@ In your `.env` file, verify these settings:
 
 ```env
 GITHUB_OWNER=rizukp
-GITHUB_REPO=T1
+GITHUB_REPO=ICA-GITHUB
 PORT=3000
 ```
 
@@ -75,8 +75,8 @@ You need to add the workflow file to your GitHub repository:
 
 ```bash
 # Clone your repository if you haven't already
-git clone https://github.com/rizukp/T1.git
-cd T1
+git clone https://github.com/rizukp/ICA-GITHUB.git
+cd ICA-GITHUB
 
 # Create the workflows directory
 mkdir -p .github/workflows
@@ -92,7 +92,7 @@ git push origin main
 
 #### Option B: Using GitHub Web Interface
 
-1. Go to https://github.com/rizukp/T1
+1. Go to https://github.com/rizukp/ICA-GITHUB
 2. Click **"Add file"** → **"Create new file"**
 3. Name it: `.github/workflows/main.yml`
 4. Copy the contents from your local `.github/workflows/main.yml` file
@@ -123,7 +123,7 @@ You should see:
 ==================================================
 📡 Server running on port 3000
 🔗 Local URL: http://localhost:3000
-📦 Repository: rizukp/T1
+📦 Repository: rizukp/ICA-GITHUB
 🔐 API Key Auth: Enabled
 ==================================================
 ```
@@ -184,7 +184,7 @@ test-api.bat
 
 ### Step 10: Verify GitHub Actions
 
-1. Go to https://github.com/rizukp/T1/actions
+1. Go to https://github.com/rizukp/ICA-GITHUB/actions
 2. You should see a new workflow run
 3. Click on it to see the execution details
 
@@ -225,7 +225,7 @@ Open http://localhost:4040 in your browser to see all HTTP requests.
 Check the terminal where you ran `npm start` or `start.bat`.
 
 ### View GitHub Actions
-Go to https://github.com/rizukp/T1/actions
+Go to https://github.com/rizukp/ICA-GITHUB/actions
 
 ## 🛠️ Troubleshooting
 
