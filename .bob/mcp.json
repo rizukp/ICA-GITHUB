@@ -1,5 +1,14 @@
 {
   "mcpServers": {
+    "github-workflow-trigger": {
+      "command": "node",
+      "args": ["mcp-server.js"],
+      "env": {
+        "API_BASE_URL": "https://uprising-theme-maturity.ngrok-free.dev",
+        "API_KEY": "82679a134903d35084f7c35e25a4b4c331a2533cacc57a6b563f373a2d28e139"
+      },
+      "disabled": false
+    },
     "context-studio": {
       "type": "streamable-http",
       "url": "https://servicesessentials.ibm.com/mcp-gateway/service/gateway/servers/8ccdd203bdee4014b08e82eedb6046e2/mcp",
